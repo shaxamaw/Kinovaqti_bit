@@ -1,0 +1,132 @@
+import { useEffect, useState } from "react";
+import { api } from "../api";
+
+const EMPTY_FORM = {
+  title: "",
+  description: "",
+  poster_url: "",
+  video_url: "",
+  category: "",
+  release_year: "",
+  required_tier: "free",
+};
+
+export default function Admin() {
+  const [tab, setTab] = useState("movies");
+  const [movies, setMovies] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [form, setForm] = useState(EMPTY_FORM);
+  const [editingId, setEditingId] = useState(null);
+  const [message, setMessage] = useState("");
+
+  function loadMovies() {
+    api.movies().then(({ movies }) => setMovies(movies));
+  }
+  function loadUsers() {
+    api.users().then(({ users }) => setUsers(users));
+  }
+
+  useEffect(() => {
+    loadMovies();
+    loadUsers();
+  }, []);
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setMessage("");
+    try {
+      const payload = { ...form, release_year: form.release_year ? Number(form.release_year) : null };
+      if (editingId) {
+        await api.updateMovie(editingId, payload);
+        setMessage("Kino yangilandi ✓");
+      } else {
+        await api.createMovie(payload);
+        setMessage("Kino qo'shildi ✓");
+      }
+      setForm(EMPTY_FORM);
+      setEditingId(null);
+      loadMovies();
+    } catch (err) {
+      setMessage(err.message);
+    }
+  }
+
+  function startEdit(m) {
+    setEditingId(m.id);
+    setForm({
+      title: m.title,
+      description: m.description || "",
+      poster_url: m.poster_url || "",
+      video_url: m.video_url || "",
+      category: m.category || "",
+      release_year: m.release_year || "",
+      required_tier: m.required_tier,
+    });
+    setTab("movies");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function handleDelete(id) {
+    if (!confirm("Ushbu kinoni o'chirishni tasdiqlaysizmi?")) return;
+    await api.deleteMovie(id);
+    loadMovies();
+  }
+
+  async function handleTierChange(userId, tier) {
+    await api.setUserTier(userId, tier);
+    loadUsers();
+  }
+
+  return (
+    <main className="admin">
+      <h1>Admin panel</h1>
+      <div className="tabs">
+        <button className={tab === "movies" ? "active" : ""} onClick={() => setTab("movies")}>
+          Kinolar
+        </button>
+        <button className={tab === "users" ? "active" : ""} onClick={() => setTab("users")}>
+          Foydalanuvchilar
+        </button>
+      </div>
+
+      {tab === "movies" && (
+        <div className="admin-grid">
+          <form className="admin-form" onSubmit={handleSubmit}>
+            <h2>{editingId ? "Kinoni tahrirlash" : "Yangi kino qo'shish"}</h2>
+            <label>Sarlavha</label>
+            <input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
+
+            <label>Tavsif</label>
+            <textarea
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              rows={3}
+            />
+
+            <label>Poster rasm havolasi</label>
+            <input value={form.poster_url} onChange={(e) => setForm({ ...form, poster_url: e.target.value })} />
+
+            <label>Video havolasi (YouTube yoki Vimeo)</label>
+            <input
+              value={form.video_url}
+              onChange={(e) => setForm({ ...form, video_url: e.target.value })}
+              placeholder="https://youtube.com/watch?v=..."
+              required
+            />
+
+            <div className="form-row">
+              <div>
+                <label>Janr</label>
+                <input value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} />
+              </div>
+              <div>
+                <label>Yil</label>
+                <input
+                  type="number"
+                  value={form.release_year}
+                  onChange={(e) => setForm({ ...form, release_year: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <label>Tarif darajasi</
