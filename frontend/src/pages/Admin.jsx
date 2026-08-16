@@ -38,10 +38,10 @@ export default function Admin() {
       const payload = { ...form, release_year: form.release_year ? Number(form.release_year) : null };
       if (editingId) {
         await api.updateMovie(editingId, payload);
-        setMessage("Kino yangilandi ✓");
+        setMessage("Kino yangilandi");
       } else {
         await api.createMovie(payload);
-        setMessage("Kino qo'shildi ✓");
+        setMessage("Kino qo'shildi");
       }
       setForm(EMPTY_FORM);
       setEditingId(null);
@@ -106,7 +106,7 @@ export default function Admin() {
             <label>Poster rasm havolasi</label>
             <input value={form.poster_url} onChange={(e) => setForm({ ...form, poster_url: e.target.value })} />
 
-            <label>Video havolasi (YouTube yoki Vimeo)</label>
+            <label>Video havolasi</label>
             <input
               value={form.video_url}
               onChange={(e) => setForm({ ...form, video_url: e.target.value })}
@@ -129,4 +129,73 @@ export default function Admin() {
               </div>
             </div>
 
-            <label>Tarif darajasi</
+            <label>Tarif darajasi</label>
+            <select
+              value={form.required_tier}
+              onChange={(e) => setForm({ ...form, required_tier: e.target.value })}
+            >
+              <option value="free">Ochiq</option>
+              <option value="premium">Premium</option>
+              <option value="vip">VIP</option>
+            </select>
+
+            {message && <p className="form-message">{message}</p>}
+            <div className="form-row">
+              <button className="btn-solid full" type="submit">
+                {editingId ? "Saqlash" : "Qo'shish"}
+              </button>
+              {editingId && (
+                <button
+                  type="button"
+                  className="btn-ghost full"
+                  onClick={() => {
+                    setEditingId(null);
+                    setForm(EMPTY_FORM);
+                  }}
+                >
+                  Bekor qilish
+                </button>
+              )}
+            </div>
+          </form>
+
+          <div className="admin-list">
+            {movies.map((m) => (
+              <div className="admin-row" key={m.id}>
+                <div>
+                  <strong>{m.title}</strong>
+                  <span className={`tier-chip tier-${m.required_tier}`}>{m.required_tier}</span>
+                </div>
+                <div className="row-actions">
+                  <button className="btn-ghost" onClick={() => startEdit(m)}>
+                    Tahrirlash
+                  </button>
+                  <button className="btn-danger" onClick={() => handleDelete(m.id)}>
+                    O'chirish
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {tab === "users" && (
+        <div className="admin-list">
+          {users.map((u) => (
+            <div className="admin-row" key={u.id}>
+              <div>
+                <strong>{u.name}</strong> <span className="card-meta">{u.email}</span>
+              </div>
+              <select value={u.tier} onChange={(e) => handleTierChange(u.id, e.target.value)}>
+                <option value="free">Ochiq</option>
+                <option value="premium">Premium</option>
+                <option value="vip">VIP</option>
+              </select>
+            </div>
+          ))}
+        </div>
+      )}
+    </main>
+  );
+}
