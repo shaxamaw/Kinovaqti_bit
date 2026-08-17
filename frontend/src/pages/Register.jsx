@@ -7,6 +7,8 @@ export default function Register() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [securityQuestion, setSecurityQuestion] = useState("");
+  const [securityAnswer, setSecurityAnswer] = useState("");
   const [error, setError] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -15,7 +17,13 @@ export default function Register() {
     e.preventDefault();
     setError("");
     try {
-      const { user, token } = await api.register({ name, email, password });
+      const { user, token } = await api.register({
+        name,
+        email,
+        password,
+        securityQuestion,
+        securityAnswer,
+      });
       login(user, token);
       navigate("/");
     } catch (err) {
@@ -34,6 +42,20 @@ export default function Register() {
         <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         <label>Parol</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+        <label>Maxfiy savol (parolni unutsangiz kerak bo'ladi)</label>
+        <input
+          value={securityQuestion}
+          onChange={(e) => setSecurityQuestion(e.target.value)}
+          placeholder="Masalan: Sevimli rangingiz?"
+          required
+        />
+        <label>Javob</label>
+        <input
+          value={securityAnswer}
+          onChange={(e) => setSecurityAnswer(e.target.value)}
+          placeholder="Javobingizni yozing"
+          required
+        />
         <button className="btn-solid full" type="submit">
           Ro'yxatdan o'tish
         </button>
