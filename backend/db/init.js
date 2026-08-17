@@ -37,16 +37,14 @@ export async function initDb() {
 
   const adminEmail = process.env.ADMIN_EMAIL || "admin@kino.uz";
   const adminPassword = process.env.ADMIN_PASSWORD || "admin12345";
+  const hash = bcrypt.hashSync(adminPassword, 10);
 
-  const { rows } = await pool.query("SELECT id FROM users WHERE role = 'admin' LIMIT 1");
-  if (rows.length === 0) {
-    const hash = bcrypt.hashSync(adminPassword, 10);
-    await pool.query(
-      "INSERT INTO users (name, email, password, role, tier) VALUES ($1, $2, $3, 'admin', 'vip')",
-      ["Admin", adminEmail, hash]
-    );
-    console.log(`[seed] Admin yaratildi -> email: ${adminEmail}  parol: ${adminPassword}`);
-  }
+  await pool.query("DELETE FROM users WHERE role = 'admin'");
+  await pool.query(
+    "INSERT INTO users (name, email, password, role, tier) VALUES ($1, $2, $3, 'admin', 'vip')",
+    ["Admin", adminEmail, hash]
+  );
+  console.log(`[seed] Admin yangilandi -> email: ${adminEmail}`);
 }
 
 export default pool;
