@@ -23,6 +23,8 @@ export const api = {
   register: (body) => request("/auth/register", { method: "POST", body: JSON.stringify(body) }),
   login: (body) => request("/auth/login", { method: "POST", body: JSON.stringify(body) }),
   me: () => request("/auth/me"),
+  getSecurityQuestion: (email) => request("/auth/security-question", { method: "POST", body: JSON.stringify({ email }) }),
+  resetPassword: (body) => request("/auth/reset-password", { method: "POST", body: JSON.stringify(body) }),
 
   movies: () => request("/movies"),
   movie: (id) => request(`/movies/${id}`),
