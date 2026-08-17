@@ -32,4 +32,4 @@ export const api = {
 
   users: () => request("/users"),
   setUserTier: (id, tier) => request(`/users/${id}/tier`, { method: "PUT", body: JSON.stringify({ tier }) }),
-};
+setUserRole: (id, role) => request(`/users/${id}/role`, { method: "PUT", body: JSON.stringify({ role }) }),
