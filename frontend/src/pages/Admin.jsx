@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../api";
+import { useAuth } from "../AuthContext";
 
 const EMPTY_FORM = {
   title: "",
@@ -12,6 +13,7 @@ const EMPTY_FORM = {
 };
 
 export default function Admin() {
+  const { user: currentUser } = useAuth();
   const [tab, setTab] = useState("movies");
   const [movies, setMovies] = useState([]);
   const [users, setUsers] = useState([]);
@@ -75,6 +77,21 @@ export default function Admin() {
   async function handleTierChange(userId, tier) {
     await api.setUserTier(userId, tier);
     loadUsers();
+  }
+
+  async function handleRoleToggle(u) {
+    const newRole = u.role === "admin" ? "user" : "admin";
+    const confirmMsg =
+      newRole === "admin"
+        ? `${u.name} (${u.email}) ni admin qilishni tasdiqlaysizmi?`
+        : `${u.name} dan admin huquqini olib tashlashni tasdiqlaysizmi?`;
+    if (!confirm(confirmMsg)) return;
+    try {
+      await api.setUserRole(u.id, newRole);
+      loadUsers();
+    } catch (err) {
+      alert(err.message);
+    }
   }
 
   return (
@@ -186,12 +203,23 @@ export default function Admin() {
             <div className="admin-row" key={u.id}>
               <div>
                 <strong>{u.name}</strong> <span className="card-meta">{u.email}</span>
+                {u.role === "admin" && <span className="tier-chip tier-vip">ADMIN</span>}
               </div>
-              <select value={u.tier} onChange={(e) => handleTierChange(u.id, e.target.value)}>
-                <option value="free">Ochiq</option>
-                <option value="premium">Premium</option>
-                <option value="vip">VIP</option>
-              </select>
+              <div className="row-actions">
+                <select value={u.tier} onChange={(e) => handleTierChange(u.id, e.target.value)}>
+                  <option value="free">Ochiq</option>
+                  <option value="premium">Premium</option>
+                  <option value="vip">VIP</option>
+                </select>
+                {u.id !== currentUser.id && (
+                  <button
+                    className={u.role === "admin" ? "btn-danger" : "btn-ghost"}
+                    onClick={() => handleRoleToggle(u)}
+                  >
+                    {u.role === "admin" ? "Admindan olish" : "Admin qilish"}
+                  </button>
+                )}
+              </div>
             </div>
           ))}
         </div>
