@@ -17,8 +17,17 @@ export async function initDb() {
       password TEXT NOT NULL,
       role TEXT NOT NULL DEFAULT 'user',
       tier TEXT NOT NULL DEFAULT 'free',
+      security_question TEXT,
+      security_answer TEXT,
       created_at TIMESTAMP DEFAULT NOW()
     );
+  `);
+
+  await pool.query(`
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS security_question TEXT;
+  `);
+  await pool.query(`
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS security_answer TEXT;
   `);
 
   await pool.query(`
