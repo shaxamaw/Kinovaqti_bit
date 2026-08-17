@@ -35,6 +35,9 @@ export default function Login() {
           Kirish
         </button>
         <p className="auth-switch">
+          <Link to="/forgot-password">Parolni unutdingizmi?</Link>
+        </p>
+        <p className="auth-switch">
           Akkauntingiz yo'qmi? <Link to="/register">Ro'yxatdan o'tish</Link>
         </p>
       </form>
