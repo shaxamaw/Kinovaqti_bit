@@ -1,22 +1,26 @@
 import { Router } from "express";
-import db from "../db/init.js";
+import pool from "../db/init.js";
 import { requireAuth, requireAdmin } from "../middleware/auth.js";
 
 const router = Router();
 
-router.get("/", requireAuth, requireAdmin, (req, res) => {
-  const users = db.prepare("SELECT id, name, email, role, tier, created_at FROM users ORDER BY created_at DESC").all();
-  res.json({ users });
+router.get("/", requireAuth, requireAdmin, async (req, res) => {
+  const result = await pool.query(
+    "SELECT id, name, email, role, tier, created_at FROM users ORDER BY created_at DESC"
+  );
+  res.json({ users: result.rows });
 });
 
-router.put("/:id/tier", requireAuth, requireAdmin, (req, res) => {
+router.put("/:id/tier", requireAuth, requireAdmin, async (req, res) => {
   const { tier } = req.body;
   if (!["free", "premium", "vip"].includes(tier)) {
     return res.status(400).json({ error: "Noto'g'ri tarif" });
   }
-  db.prepare("UPDATE users SET tier = ? WHERE id = ?").run(tier, req.params.id);
-  const user = db.prepare("SELECT id, name, email, role, tier FROM users WHERE id = ?").get(req.params.id);
-  res.json({ user });
+  const update = await pool.query(
+    "UPDATE users SET tier = $1 WHERE id = $2 RETURNING id, name, email, role, tier",
+    [tier, req.params.id]
+  );
+  res.json({ user: update.rows[0] });
 });
 
 export default router;
