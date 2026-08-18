@@ -91,3 +91,7 @@ bot.onText(/\/qidir (.+)/, async (msg, match) => {
 });
 
 console.log("Bot ishga tushdi...");
+const app = express();
+app.get("/", (req, res) => res.send("Bot ishlayapti"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Uyg'oq turish uchun server ${PORT}-portda`));
