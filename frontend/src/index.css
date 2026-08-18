@@ -170,3 +170,39 @@ label { display: block; }
   .nav { padding: 14px 16px; flex-wrap: wrap; gap: 10px; }
   .admin h1 { font-size: 32px; }
   }
+.footer {
+  border-top: 1px solid var(--line);
+  background: var(--bg-raised);
+  padding: 32px 24px;
+  margin-top: 40px;
+}
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+.footer-brand {
+  font-family: "Bebas Neue", "Manrope", sans-serif;
+  font-size: 22px;
+  color: var(--cream);
+}
+.footer-brand span { color: var(--gold); }
+.footer-links {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.footer-links a {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.15s ease;
+}
+.footer-links a:hover {
+  color: var(--gold);
+}
