@@ -34,6 +34,55 @@ label { display: block; }
   background: linear-gradient(180deg, var(--bg-raised), var(--bg));
   position: sticky; top: 0; z-index: 10;
 }
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  position: relative;
+}
+.nav-menu-btn {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--cream);
+  font-size: 20px;
+  line-height: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.nav-menu-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.nav-dropdown {
+  position: absolute;
+  top: 44px;
+  left: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  z-index: 20;
+}
+.nav-dropdown a {
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: var(--cream);
+  font-size: 14px;
+  font-weight: 600;
+}
+.nav-dropdown a:hover {
+  background: var(--bg-raised);
+  color: var(--gold);
+}
 .brand { font-size: 28px; color: var(--cream); }
 .brand span { color: var(--gold); }
 .nav-links { display: flex; align-items: center; gap: 18px; }
