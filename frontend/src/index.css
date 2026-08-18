@@ -206,3 +206,6 @@ label { display: block; }
 .footer-links a:hover {
   color: var(--gold);
 }
+.footer-links a:hover {
+  color: var(--gold);
+}
