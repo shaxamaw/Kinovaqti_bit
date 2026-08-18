@@ -209,3 +209,100 @@ label { display: block; }
 .footer-links a:hover {
   color: var(--gold);
 }
+.pricing { max-width: 1000px; margin: 0 auto; padding: 0 20px 64px; }
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin: 32px 0 56px;
+}
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+.pricing-amount {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 40px;
+  color: var(--cream);
+}
+.pricing-amount span {
+  font-family: "Manrope", sans-serif;
+  font-size: 14px;
+  color: var(--muted);
+  font-weight: 500;
+}
+.pricing-features {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.pricing-features li {
+  color: var(--cream);
+  opacity: 0.85;
+  font-size: 14px;
+  padding-left: 22px;
+  position: relative;
+}
+.pricing-features li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: 800;
+}
+
+.pricing-instructions {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 28px;
+}
+.pricing-instructions h2 {
+  font-size: 26px;
+  margin: 0 0 16px;
+}
+.pricing-instructions ol {
+  padding-left: 20px;
+  color: var(--cream);
+  opacity: 0.9;
+  line-height: 1.7;
+}
+.pricing-instructions a {
+  color: var(--gold);
+  font-weight: 700;
+  text-decoration: underline;
+}
+.card-details {
+  background: var(--bg);
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 18px 20px;
+  margin: 14px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.card-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 700;
+}
+.card-value {
+  display: block;
+  font-size: 18px;
+  color: var(--gold);
+  font-family: "Bebas Neue", sans-serif;
+  letter-spacing: 0.04em;
+}
