@@ -20,6 +20,9 @@ export default function Admin() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [editingId, setEditingId] = useState(null);
   const [message, setMessage] = useState("");
+  const [bannerUrl, setBannerUrl] = useState("");
+  const [bannerInput, setBannerInput] = useState("");
+  const [bannerMessage, setBannerMessage] = useState("");
 
   function loadMovies() {
     api.movies().then(({ movies }) => setMovies(movies));
@@ -27,10 +30,17 @@ export default function Admin() {
   function loadUsers() {
     api.users().then(({ users }) => setUsers(users));
   }
+  function loadBanner() {
+    api.getBanner().then(({ bannerUrl }) => {
+      setBannerUrl(bannerUrl || "");
+      setBannerInput(bannerUrl || "");
+    });
+  }
 
   useEffect(() => {
     loadMovies();
     loadUsers();
+    loadBanner();
   }, []);
 
   async function handleSubmit(e) {
@@ -94,6 +104,25 @@ export default function Admin() {
     }
   }
 
+  async function handleBannerSave(e) {
+    e.preventDefault();
+    setBannerMessage("");
+    try {
+      await api.setBanner(bannerInput);
+      setBannerUrl(bannerInput);
+      setBannerMessage("Banner saqlandi");
+    } catch (err) {
+      setBannerMessage(err.message);
+    }
+  }
+
+  async function handleBannerRemove() {
+    if (!confirm("Bannerni o'chirishni tasdiqlaysizmi?")) return;
+    await api.setBanner("");
+    setBannerUrl("");
+    setBannerInput("");
+  }
+
   return (
     <main className="admin">
       <h1>Admin panel</h1>
@@ -103,6 +132,9 @@ export default function Admin() {
         </button>
         <button className={tab === "users" ? "active" : ""} onClick={() => setTab("users")}>
           Foydalanuvchilar
+        </button>
+        <button className={tab === "banner" ? "active" : ""} onClick={() => setTab("banner")}>
+          Banner
         </button>
       </div>
 
@@ -223,6 +255,34 @@ export default function Admin() {
             </div>
           ))}
         </div>
+      )}
+
+      {tab === "banner" && (
+        <form className="admin-form" onSubmit={handleBannerSave} style={{ maxWidth: 480 }}>
+          <h2>Bosh sahifa banneri</h2>
+          <label>Banner rasm havolasi</label>
+          <input
+            value={bannerInput}
+            onChange={(e) => setBannerInput(e.target.value)}
+            placeholder="https://..."
+          />
+          {bannerUrl && (
+            <img
+              src={bannerUrl}
+              alt="Banner ko'rinishi"
+              style={{ width: "100%", borderRadius: 12, marginTop: 12, border: "1px solid var(--line)" }}
+            />
+          )}
+          {bannerMessage && <p className="form-message">{bannerMessage}</p>}
+          <div className="form-row">
+            <button className="btn-solid full" type="submit">
+              Saqlash
+            </button>
+            <button type="button" className="btn-danger full" onClick={handleBannerRemove}>
+              O'chirish
+            </button>
+          </div>
+        </form>
       )}
     </main>
   );
