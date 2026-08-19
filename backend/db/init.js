@@ -23,12 +23,8 @@ export async function initDb() {
     );
   `);
 
-  await pool.query(`
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS security_question TEXT;
-  `);
-  await pool.query(`
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS security_answer TEXT;
-  `);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS security_question TEXT;`);
+  await pool.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS security_answer TEXT;`);
 
   await pool.query(`
     CREATE TABLE IF NOT EXISTS movies (
@@ -41,6 +37,13 @@ export async function initDb() {
       release_year INTEGER,
       required_tier TEXT NOT NULL DEFAULT 'free',
       created_at TIMESTAMP DEFAULT NOW()
+    );
+  `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS settings (
+      key TEXT PRIMARY KEY,
+      value TEXT
     );
   `);
 
